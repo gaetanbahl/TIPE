@@ -2,7 +2,7 @@
 \usepackage[T1]{fontenc}
 \usepackage[francais]{babel}     
 \usepackage[utf8]{inputenc}
-
+\usepackage{graphicx}
 \title{TIPE: Tic-Tac-Toe et les arbres de décision}
 \author{Gaétan Bahl et Quentin Adam}
 
@@ -10,7 +10,28 @@
 \maketitle
 \tableofcontents
 
-\pagebreak
+
+\clearpage
+
+\section{Introduction aux arbres}
+
+En s'intéressant aux intelligences artificielles et surtout aux moyens que
+celles-ci utilisent pour prendre leur décisions
+on est vite confronté dans le cas des jeux (de société, par exemple), à la
+représentation de données par des arbres dans leur sens mathématique ou
+informatique.
+
+\subsection{Qu'est-ce qu'un arbre ?}
+
+Un arbre est une donnée représentant un ensemble $E$ et une relation binaire $R$
+symétrique qui lie les éléments de cet ensemble,
+de sorte que deux éléments de l'ensemble soient liés entre eux par un unique
+chemin le plus court possible.
+
+
+
+
+
 
 \section{\uppercase{à} quoi servent les arbres de décision ?}
 
@@ -22,24 +43,91 @@ leur comportement est donc géré par des arbres qui contiennent
  toutes les états dans lesquels peuvent se trouver les différents 
 éléments avec lesquels doit intéragir l'automate.
 Dans ce cas là, les arbres sont souvent binaires, 
-c'est à dire qu'ils se résument à <<Si telle situation arrive>>, alors <<faire cela>>.
+c'est à dire qu'ils se résument à <<Si telle situation arrive>>, alors <<faire
+cela>>.
 
 \subsection{En entreprise}
 
-Les décisions possibles dans le cas de l'économie sont aussi prises grâce à des arbres de décision,
-on représente les différentes solutions à un problème avec leurs conséquences, puis on choisit 
+Les décisions possibles dans le cas de l'économie sont aussi prises grâce à des
+arbres de décision,
+on représente les différentes solutions à un problème avec leurs conséquences,
+puis on choisit 
 la marche à suivre en fonction de ça.
 
 \subsection{Dans l'industrie}
 
 Les ouvriers qui travaillent dans l'industrie ont un <<process>> écrit 
 leur indiquant la marche à suivre en cas de problème, 
-ou au contraire si tout se passe bien. Par exemple dans l'imprimerie, il y a une méthode à executer si la 
+ou au contraire si tout se passe bien. Par exemple dans l'imprimerie, il y a une
+méthode à executer si la 
 couleur de sortie n'est pas exactement la bonne.
-Cela revient par exemple à <<si le mélange n'est pas bon, ajouter un peu de teinte à l'encre>> en boucle.
+Cela revient par exemple à <<si le mélange n'est pas bon, ajouter un peu de
+teinte à l'encre>> en boucle.
+
 
 \subsection{Dans les intelligences artificielles}
 
-Les intelligences artificielles, ou IA sont souvent basées sur des abres de décision 
+Les intelligences artificielles, ou IA sont souvent basées sur des abres de
+décision 
+
+\pagebreak
+
+\section{Les arbres dans les jeux et application au <<Tic tac Toe>>}
+
+Parmi les utilisations des arbres de décisions, on trouve les arbres de jeu.
+Les arbres sont pratiques dans le cas de la création d'une intelligence
+artificielle puisque 
+ceux-ci sont adaptés à l'exploration
+de tous les resultats et issues possibles à un certain moment du jeu,
+l'intelligence artificielle évalue ensuite quelle partie de l'arbre sera la plus
+propice à une victoire et choisit son coup en fonction de cela. C'est ce qui est
+utilisé notamment pour la création d'intelligences
+artificielles pour le jeu d'échecs, du moins, en partie, puisqu'il est assez compliqué de créer
+ un arbres de toutes les issues possibles d'une partie d'échecs.
+
+\subsection{Introduction au jeu <<Tic Tac Toe>>}
+
+Le jeu <<Tic tac Toe>>, aussi appelé <<morpion>> est un jeu simple, à deux joueurs, se jouant au tour à tour sur une grille de 3*3 cases.
+Le joueur qui commence la partie et que l'on nommera <<joueur 1>> a le rôle des $O$, l'autre joueur a le rôle des $X$, à l'origine.
+Le but du joueur est d'aligner 3 de ses signes, que ce soit en ligne, en colonne ou en diagonale dans la grille.
+
+\marginpar{\includegraphics[scale=0.5]{image1.eps}\\ Mon petit poney}
+
+\subsection{L'algorithme Min-Max}
+
+L'exploitation des arbres de jeu peut être faite par l'algorithme Min-Max 
+que nous allons appliquer au jeu du <<Tic Tac Toe>>. \\
+
+Par définition, l'algorithme Min-
+Max se prête à un jeu à deux joueurs dans le but d'appliquer une stratégie
+gagnante. 
+Afin d'introduire cet algorithme, expliquons la condition de somme nulle qui
+doit être remplie pour Min-Max : 
+lorsque le joueur gagne une partie, on ajoute 1 à son gain et respectivement -1
+lors 
+d'une défaite et 0 lors d'une partie nulle. \\
+
+On peut donc considérer que le <<Tic Tac Toe>> est un jeu à somme nulle.
+Dans la suite on se place dans le cadre du <<Tic Tac Toe>>. \\
+
+L'algorithme Min-Max est donc simple : après que l'IA ai calculé toutes les
+possibilités de jouer,
+ il choisi la meilleure option pour gagner. \\
+
+On s'imagine alors bien que Min-Max peut calculer à différents ordres. L'ordre 1
+correspond à l'ordre auquel 
+l'IA calcule uniquement les différentes possibilités pour le coup suivant et
+Min-Max cherche uniquement 
+la meilleure solution pour le coup suivant. De même, on définit donc l'ordre 2
+et plus.
+Donc, à l'ordre 2, Min-Max évalue son prochain coup et le coup de l'adversaire,
+et évidemment 
+l'IA considère que les deux coups joués sont effectués en vue de gagner. L'IA
+"veut" donc 
+maximiser son score sur le prochain coup, tout en minimisant le coup suivant de
+l'adversaire.
+D'où le terme de Min-Max.
+
+
 
 \end{document}
