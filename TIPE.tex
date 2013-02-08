@@ -15,11 +15,13 @@
 
 \section{Introduction aux arbres}
 
+Les arbres de décisions sont nés en 1963 alors que Morgan et Sonquist se sont attaqués au problème de prédiction de variables. Bien que la précision de chaque probabilité et le nombre de branches aient augmenté, la manière de penser les arbres de décisions n'a pas changé pour autant. En effet, l'algorithme recherche toujours la branche avec le poids le plus important. C'est donc pourquoi les intelligences artificielles ont pris le relais.
 En s'intéressant aux intelligences artificielles et surtout aux moyens que
 celles-ci utilisent pour prendre leur décisions
 on est vite confronté dans le cas des jeux (de société, par exemple), à la
 représentation de données par des arbres dans leur sens mathématique ou
 informatique.
+
 
 \subsection{Qu'est-ce qu'un arbre ?}
 
@@ -91,7 +93,7 @@ Le jeu <<Tic tac Toe>>, aussi appelé <<morpion>> est un jeu simple, à deux jou
 Le joueur qui commence la partie et que l'on nommera <<joueur 1>> a le rôle des $O$, l'autre joueur a le rôle des $X$, à l'origine.
 Le but du joueur est d'aligner 3 de ses signes, que ce soit en ligne, en colonne ou en diagonale dans la grille.
 
-\marginpar{\includegraphics[scale=0.5]{image1.eps}\\ Mon petit poney}
+%\marginpar{\includegraphics[scale=0.5]{image1.eps}\\ Morpion}
 
 \subsection{L'algorithme Min-Max}
 
@@ -127,6 +129,14 @@ l'IA considère que les deux coups joués sont effectués en vue de gagner. L'IA
 maximiser son score sur le prochain coup, tout en minimisant le coup suivant de
 l'adversaire.
 D'où le terme de Min-Max.
+
+\section{Présentation de l'algorithmique}
+
+Dans cette partie, nous allons exposer les différentes parties du programme permettant d'évaluer le poids de chaque branche et donc de déterminer la meilleure option pour gagner.
+
+\subsection{L'algorithme}
+
+
 
 
 
