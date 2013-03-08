@@ -1,6 +1,6 @@
 \documentclass{article}
 \usepackage[T1]{fontenc}
-\usepackage[francais]{babel}     
+\usepackage[francais]{babel}
 \usepackage[utf8]{inputenc}
 \usepackage{graphicx}
 \title{TIPE: Tic-Tac-Toe et les arbres de décision}
@@ -20,7 +20,7 @@ En s'intéressant aux intelligences artificielles et surtout aux moyens que
 celles-ci utilisent pour prendre leur décisions
 on est vite confronté dans le cas des jeux (de société, par exemple), à la
 représentation de données par des arbres dans leur sens mathématique ou
-informatique.
+informatique. Ces calculs de probabilité ont rapidement été freinés par l'ampleur des chiffres. D'où l'utilisation de super calculateur ou d'ordinateurs par exemple.C'est pourquoi notre TIPE portera sur un arbre de décision que l'on étudiera à l'aide d'algorithmes.
 
 
 \subsection{Qu'est-ce qu'un arbre ?}
@@ -40,11 +40,11 @@ chemin le plus court possible.
 \subsection{En automatique}
 
 Les arbres de décision sont largement utilisés par les automates,
- qui doivent réagir à un nombre fini de situations possibles, 
+ qui doivent réagir à un nombre fini de situations possibles,
 leur comportement est donc géré par des arbres qui contiennent
- toutes les états dans lesquels peuvent se trouver les différents 
+ toutes les états dans lesquels peuvent se trouver les différents
 éléments avec lesquels doit intéragir l'automate.
-Dans ce cas là, les arbres sont souvent binaires, 
+Dans ce cas là, les arbres sont souvent binaires,
 c'est à dire qu'ils se résument à <<Si telle situation arrive>>, alors <<faire
 cela>>.
 
@@ -53,15 +53,15 @@ cela>>.
 Les décisions possibles dans le cas de l'économie sont aussi prises grâce à des
 arbres de décision,
 on représente les différentes solutions à un problème avec leurs conséquences,
-puis on choisit 
+puis on choisit
 la marche à suivre en fonction de ça.
 
 \subsection{Dans l'industrie}
 
-Les ouvriers qui travaillent dans l'industrie ont un <<process>> écrit 
-leur indiquant la marche à suivre en cas de problème, 
+Les ouvriers qui travaillent dans l'industrie ont un <<process>> écrit
+leur indiquant la marche à suivre en cas de problème,
 ou au contraire si tout se passe bien. Par exemple dans l'imprimerie, il y a une
-méthode à executer si la 
+méthode à executer si la
 couleur de sortie n'est pas exactement la bonne.
 Cela revient par exemple à <<si le mélange n'est pas bon, ajouter un peu de
 teinte à l'encre>> en boucle.
@@ -70,15 +70,13 @@ teinte à l'encre>> en boucle.
 \subsection{Dans les intelligences artificielles}
 
 Les intelligences artificielles, ou IA sont souvent basées sur des abres de
-décision 
-
-\pagebreak
+décision
 
 \section{Les arbres dans les jeux et application au <<Tic tac Toe>>}
 
 Parmi les utilisations des arbres de décisions, on trouve les arbres de jeu.
 Les arbres sont pratiques dans le cas de la création d'une intelligence
-artificielle puisque 
+artificielle puisque
 ceux-ci sont adaptés à l'exploration
 de tous les resultats et issues possibles à un certain moment du jeu,
 l'intelligence artificielle évalue ensuite quelle partie de l'arbre sera la plus
@@ -100,16 +98,16 @@ nul, on parle de jeu \emph{futile}.
 
 \subsection{L'algorithme Min-Max}
 
-L'exploitation des arbres de jeu peut être faite par l'algorithme Min-Max 
+L'exploitation des arbres de jeu peut être faite par l'algorithme Min-Max
 que nous allons appliquer au jeu du <<Tic Tac Toe>>. \\
 
 Par définition, l'algorithme Min-
 Max se prête à un jeu à deux joueurs dans le but d'appliquer une stratégie
-gagnante. 
+gagnante.
 Afin d'introduire cet algorithme, expliquons la condition de somme nulle qui
-doit être remplie pour Min-Max : 
+doit être remplie pour Min-Max :
 lorsque le joueur gagne une partie, on ajoute 1 à son gain et respectivement -1
-lors 
+lors
 d'une défaite et 0 lors d'une partie nulle. \\
 
 On peut donc considérer que le <<Tic Tac Toe>> est un jeu à somme nulle.
@@ -120,19 +118,23 @@ possibilités de jouer,
  il choisi la meilleure option pour gagner. \\
 
 On s'imagine alors bien que Min-Max peut calculer à différents ordres. L'ordre 1
-correspond à l'ordre auquel 
+correspond à l'ordre auquel
 l'IA calcule uniquement les différentes possibilités pour le coup suivant et
-Min-Max cherche uniquement 
+Min-Max cherche uniquement
 la meilleure solution pour le coup suivant. De même, on définit donc l'ordre 2
 et plus.
 Donc, à l'ordre 2, Min-Max évalue son prochain coup et le coup de l'adversaire,
-et évidemment 
+et évidemment
 l'IA considère que les deux coups joués sont effectués en vue de gagner. L'IA
-"veut" donc 
+"veut" donc
 maximiser son score sur le prochain coup, tout en minimisant le coup suivant de
 l'adversaire.
-D'où le terme de Min-Max.
+D'où le terme de Min-Max. 
 
+
+\subsection{L'élagage \alpha \beta}
+
+Bien que le <<Tic-Tac-Toe>> soit assez simple, les nombre de coups qui doivent être évalués par l'algorithme Min-Max reste conséquent. L'élagage \alpha{} - \beta{} sert à mettre de côté les branches dont l'intérêt sera forcément moindre afin de gagner en efficacité.
 
 \section{Présentation des programmes}
 
@@ -140,7 +142,7 @@ Dans cette partie, nous allons exposer les différentes parties du programme per
 
 \subsection{La génération de l'arbre}
 
-Une structure personnelle à base de dictionnaires a été utilisée pour la mise en mémoire des données. Les noeuds de l'arbre sont représentés par les grilles de jeu à un instant de la partie, les branches qui en découlent sont toutes les possibilités de coup envisageables. L'arbre est construit récursivement à partir la grille de départ par la fonction \emph{arbre_a_partir_de}, qui va explorer toutes les possibilités. Le temps de calcul n'est pas excessivement long car finalement, le jeu de morpion est très simple et il n'y a <<qu'environ>> 200 000 parties possibles. C'est une solution de génération qui ne serait pas envisageable au jeu d'échecs par exemple, car le temps de calcul serait beaucoup trop long (il y a 2x10\up{116} parties possibles aux échecs), en effet, il faudrait 10\up{21} siècles au plus puissant calculateur d'échecs pour établir tout l'arbre.
+Une structure personnelle à base de dictionnaires a été utilisée pour la mise en mémoire des données. Les noeuds de l'arbre sont représentés par les grilles de jeu à un instant de la partie, les branches qui en découlent sont toutes les possibilités de coup envisageables. L'arbre est construit récursivement à partir la grille de départ par la fonction \emph{arbre\_a\_partir\_de}, qui va explorer toutes les possibilités. Le temps de calcul n'est pas excessivement long car finalement, le jeu de morpion est très simple et il n'y a <<qu'environ>> 200 000 parties possibles. C'est une solution de génération qui ne serait pas envisageable au jeu d'échecs par exemple, car le temps de calcul serait beaucoup trop long (il y a 2x10\up{116} parties possibles aux échecs), en effet, il faudrait 10\up{21} siècles au plus puissant calculateur d'échecs pour établir tout l'arbre.
 
 \subsection{Les calculs statistiques}
 
@@ -149,8 +151,6 @@ Bien que ce ne soit pas exactement le sujet ici, pour vérifier que l'arbre éta
 %insérer le calcul de dénombrement ici
 
 Les chiffres nous permettent de dire que le joueur qui commence la partie a un avantage considérable quant à l'issue de la partie, puisqu'il y a quasiment deux fois plus de combinaisons favorables à sa victoire. On constate aussi que si le joueur qui commence la partie joue dans un des coins de la grille, ses <<chances>> de gagner sont quasiment doublées.
-
-
 
 
 
