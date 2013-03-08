@@ -93,6 +93,9 @@ Le jeu <<Tic tac Toe>>, aussi appelé <<morpion>> est un jeu simple, à deux jou
 Le joueur qui commence la partie et que l'on nommera <<joueur 1>> a le rôle des $O$, l'autre joueur a le rôle des $X$, à l'origine.
 Le but du joueur est d'aligner 3 de ses signes, que ce soit en ligne, en colonne ou en diagonale dans la grille.
 
+Dans ce jeu, deux joueurs expérimentés ou deux intelligences artificielles qui jouent ensemble arrivent toujours à un match
+nul, on parle de jeu \emph{futile}.
+
 %\marginpar{\includegraphics[scale=0.5]{image1.eps}\\ Morpion}
 
 \subsection{L'algorithme Min-Max}
@@ -130,11 +133,23 @@ maximiser son score sur le prochain coup, tout en minimisant le coup suivant de
 l'adversaire.
 D'où le terme de Min-Max.
 
-\section{Présentation de l'algorithmique}
 
-Dans cette partie, nous allons exposer les différentes parties du programme permettant d'évaluer le poids de chaque branche et donc de déterminer la meilleure option pour gagner.
+\section{Présentation des programmes}
 
-\subsection{L'algorithme}
+Dans cette partie, nous allons exposer les différentes parties du programme permettant d'évaluer le poids de chaque branche et donc de déterminer la meilleure option pour gagner. Le langage de programmation utilisé est Python.
+
+\subsection{La génération de l'arbre}
+
+Une structure personnelle à base de dictionnaires a été utilisée pour la mise en mémoire des données. Les noeuds de l'arbre sont représentés par les grilles de jeu à un instant de la partie, les branches qui en découlent sont toutes les possibilités de coup envisageables. L'arbre est construit récursivement à partir la grille de départ par la fonction \emph{arbre_a_partir_de}, qui va explorer toutes les possibilités. Le temps de calcul n'est pas excessivement long car finalement, le jeu de morpion est très simple et il n'y a <<qu'environ>> 200 000 parties possibles. C'est une solution de génération qui ne serait pas envisageable au jeu d'échecs par exemple, car le temps de calcul serait beaucoup trop long (il y a 2x10\up{116} parties possibles aux échecs), en effet, il faudrait 10\up{21} siècles au plus puissant calculateur d'échecs pour établir tout l'arbre.
+
+\subsection{Les calculs statistiques}
+
+Bien que ce ne soit pas exactement le sujet ici, pour vérifier que l'arbre était bien juste et que notre algorithme était fonctionnel, nous avons créé des fonctions permettant de trouver les nombres de parties possibles et de parties gagnantes possibles pour chaque coup, chiffres que nous avons comparés à ceux que l'on peut trouver par dénombrement.
+
+%insérer le calcul de dénombrement ici
+
+Les chiffres nous permettent de dire que le joueur qui commence la partie a un avantage considérable quant à l'issue de la partie, puisqu'il y a quasiment deux fois plus de combinaisons favorables à sa victoire. On constate aussi que si le joueur qui commence la partie joue dans un des coins de la grille, ses <<chances>> de gagner sont quasiment doublées.
+
 
 
 
