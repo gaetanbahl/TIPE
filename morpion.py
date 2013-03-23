@@ -1,24 +1,41 @@
 #!/usr/bin/python
 # -*- coding: iso-8859-1 -*-
+#  morpion.py
+#  
+#  Copyright 2013 Gaétan Bahl <blacky@netbook>
+#  
+#  This program is free software; you can redistribute it and/or modify
+#  it under the terms of the GNU General Public License as published by
+#  the Free Software Foundation; either version 2 of the License, or
+#  (at your option) any later version.
+#  
+#  This program is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU General Public License for more details.
+#  
+#  You should have received a copy of the GNU General Public License
+#  along with this program; if not, write to the Free Software
+#  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+#  MA 02110-1301, USA.
+#  
+#  
 #au morpion les ronds commencent, on part du principe que l'ordinateur joue les ronds, quitte à  changer f en moins f =)
-#c'est une matrice 3x3
-##TODO:PENSER A CHANGER LES STRINGS EN ENTIERS -> OPTIMISATION <- ou pas ? OSEF 
-##TODO:faire une classe pour morpion.. (ou pour l'arbre)
-##TODO CASE MARCHE PAS <- DONE
-##DONE x = 'x', o = 'o', e = "_" <- e = empty cases tout ça....
-##DONE est_rempli fonctionne
-##TODO hein
-##TODO checker le bordel entre x et y flemme là <- ouais bon ça marche quand même
 
 
-x,o,e = 'x', 'o', "_"  
+
+e = "_" 
+o = 'o'
+x = 'x'
+
+
 
 def est_rempli(tableau): #renvoie true ou false
   est_remplie = True
   for i in tableau:
     for j in i:
       if j != "x" and  j != "o":
-  	est_remplie = False
+		est_remplie = False
   return est_remplie
 
 def state(tableau): # fonction qui prend un tableau et qui vérifie l'état de la partie (en cours, win, lose, draw)
@@ -107,7 +124,6 @@ def representation(grille): #renvoie une string representant la grille
 	return texte
 	
 def representation_liste(liste_de_grilles):  #pareil avec plusieurs grilles dans une liste
-	print liste_de_grilles
 	texte = ""
 	for i in liste_de_grilles:
 		texte = texte + representation(i) + "\n"
@@ -150,24 +166,37 @@ def arbre_dico(grille): #faire des dictionaires
 	else:
 		dico["subtree"] = etat
 	return dico
-		
-		 
-			
+
+def nombre_objets_ligne(lettre,grille,ligne):
+	nombre = 0
+	for i in grille[ligne]:
+		if i == lettre:
+			nombre += 1
+	return nombre
+	
+	
+
+def prendre_liste_grilles(arbre):
+	liste_grilles = []
+	liste_grilles.append(arbre["grille"])
+	if isinstance(arbre["subtree"],str):
+		return liste_grilles
+	else:
+		for i in arbre["subtree"]:
+			for j in parcourir(i):
+				liste_grilles.append(j)
+		return liste_grilles
 
 def main():
-	#print state([[o,o,o],[o,o,o],[o,o,o]])
-	#print state([[o,x,o],[x,x,o],[x,o,o]])
-	#print state([[o,o,o],[x,o,x],[x,x,o]])
-	#print state([[o,e,e],[e,e,e],[e,e,e]])
-	#print tour([[e,e,e],[e,e,e],[e,e,e]])
-	#print cases_vides([[o,e,e],[e,x,e],[e,e,e]])
-	#representer([[o,o,o],[x,o,x],[x,x,o]])
+	
 	#print est_rempli([[o,o,o],[e,o,x],[x,x,e]])
 	#print representation_liste(tableaux_possibles([[o,o,o],[e,o,x],[x,x,e]]))
 	#liste = arbre_a_partir_de([[o,e,e],[x,o,x],[o,e,x]])
 	#print state([[o,o,o],[x,x,o],[x,o,x]])
 	#print arbre_dico([[o,o,e],[e,x,o],[x,e,e]])
 	#print tour([[o,o,e],[e,x,o],[x,e,e]])
-	print arbre_dico([[e,e,e],[e,e,e],[e,e,e]])
+	poney = arbre_dico([[e,e,e],[e,e,e],[e,e,e]])
+	for i in prendre_liste_grilles(poney):
+		print representation(i)
 if __name__ == "__main__":
 	main() 
