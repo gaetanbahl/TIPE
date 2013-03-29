@@ -1,10 +1,14 @@
 \documentclass{article}
-\usepackage[T1]{fontenc}
+\usepackage{lmodern}
 \usepackage[francais]{babel}
 \usepackage[utf8]{inputenc}
 \usepackage{graphicx}
 \usepackage{shortvrb}
-\title{TIPE: Tic-Tac-Toe et les arbres de décision}
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage{listings}
+
+\title{TIPE: autour du Tic-Tac-Toe et des arbres de décision}
 \author{Gaétan Bahl et Quentin Adam}
 
 \begin{document}
@@ -14,22 +18,32 @@
 \MakeShortVerb{@}
 \clearpage
 
+\newcommand{\fonction}[5]{\begin{array}{l|rcl}
+#1: & #2 & \longrightarrow & #3 \\
+    & #4 & \longmapsto & #5 \end{array}}
+
 \section{Introduction aux arbres}
 
-Les arbres de décisions sont nés en 1963 alors que Morgan et Sonquist se sont attaqués au problème de prédiction de variables. Bien que la précision de chaque probabilité et le nombre de branches aient augmenté, la manière de penser les arbres de décisions n'a pas changé pour autant. En effet, l'algorithme recherche toujours la branche avec le poids le plus important. C'est donc pourquoi les intelligences artificielles ont pris le relais.
+
 En s'intéressant aux intelligences artificielles et surtout aux moyens que
 celles-ci utilisent pour prendre leur décisions
 on est vite confronté dans le cas des jeux (de société, par exemple), à la
 représentation de données par des arbres dans leur sens mathématique ou
-informatique. Ces calculs de probabilité ont rapidement été freinés par l'ampleur des chiffres. D'où l'utilisation de super calculateur ou d'ordinateurs par exemple.C'est pourquoi notre TIPE portera sur un arbre de décision que l'on étudiera à l'aide d'algorithmes.
+informatique. La somme de travail au niveau calculatoire qui est nécessaire à l'exploration de telles structures de données étant souvent importante,
+on peut s'intéresser à la manière dont les ordinateurs et supercalculateurs utilisent ces arbres.
+C'est pourquoi notre TIPE portera sur un arbre de décision que l'on étudiera à l'aide d'algorithmes.
 
 
 \subsection{Qu'est-ce qu'un arbre ?}
 
+Les arbres sont nés en 1963 alors que Morgan et Sonquist se sont attaqués au problème de prédiction de variables. 
 Un arbre est une donnée représentant un ensemble $E$ et une relation binaire $R$
 symétrique qui lie les éléments de cet ensemble,
 de sorte que deux éléments de l'ensemble soient liés entre eux par un unique
-chemin le plus court possible.
+chemin le plus court possible. Les arbres sont des éléments de la théorie des graphes.
+Dans le cas d'un arbre de décision, on attribue un \emph{poids} à chaque branche de l'arbre, de sorte que
+les branches qui présentent le plus d'avantages aient le poids le plus grand.
+L'algorithme qui va explorer l'arbre recherche donc toujours la branche avec le poids le plus important.
 
 
 \section{\uppercase{à} quoi servent les arbres de décision ?}
@@ -60,14 +74,14 @@ leur indiquant la marche à suivre en cas de problème,
 ou au contraire si tout se passe bien. Par exemple dans l'imprimerie, il y a une
 méthode à executer si la
 couleur de sortie n'est pas exactement la bonne.
-Cela revient par exemple à <<si le mélange n'est pas bon, ajouter un peu de
+Cela revient par exemple à exécuter <<si le mélange n'est pas bon, ajouter un peu de
 teinte à l'encre>> en boucle.
 
 
 \subsection{Dans les intelligences artificielles}
 
 Les intelligences artificielles, ou IA sont souvent basées sur des abres de
-décision
+décision, c'est ce qui sera étudié dans ce TIPE. 
 
 \section{Les arbres dans les jeux et application au <<Tic tac Toe>>}
 
@@ -84,71 +98,176 @@ artificielles pour le jeu d'échecs, du moins, en partie, puisqu'il est assez co
 
 \subsection{Introduction au jeu <<Tic Tac Toe>>}
 
-Le jeu <<Tic tac Toe>>, aussi appelé <<morpion>> est un jeu simple, à deux joueurs, se jouant au tour à tour sur une grille de 3*3 cases.
-<<Quitte à changer les $o$ en $x$>>, on pose que le joueur qui commence la partie a le rôle des $O$, l'autre joueur a le rôle des $X$.
-Le but du joueur est d'aligner 3 de ses signes, que ce soit en ligne, en colonne ou en diagonale dans la grille. Une représentation de la grille de jeu est montrée par la figure~\ref{grille}
+Le jeu <<Tic tac Toe>>, aussi appelé <<morpion>> en France, est un jeu simple, à deux joueurs, se jouant au tour à tour sur une grille de 3*3 cases.
+<<Quitte à changer les $O$ en $X$>>, on supposera dans tout le document que le joueur qui commence la partie a le rôle des $O$, l'autre joueur a le rôle des $X$.
+Le but du joueur est d'aligner 3 de ses signes, que ce soit en ligne, en colonne ou en diagonale dans la grille. 
+Une représentation de la grille de jeu est montrée par la figure ~\ref{grille}
 
 Dans ce jeu, deux joueurs expérimentés ou deux intelligences artificielles qui jouent ensemble arrivent toujours à un match
-nul, on parle de jeu \emph{futile}.
+nul, on parle de jeu \emph{futile}. Le plateau de jeu ayant 9 cases, une partie se joue en un maximum de 9 coups et en un minimum de 5 coups.
+En résulte le fait que les parties de ce jeu sont relativement rapides, et que l'arbre qui lui est associé est relativement petit.
 
 \begin{figure}[!h]
 \centering
-\includegraphics[scale=0.5]{image1.eps}
+\includegraphics[scale=0.5]{morpion.png}
 \caption{Une partie de morpion}
 \label{grille}
 \end{figure}
 
+\subsection{Notations}
+
+
+\subsubsection{Définition 1}
+On note $G$ l'ensemble des grilles de <<Tic-Tac-Toe>> à n'importe quel état de la partie, $G_{f}$ l'ensemble des grilles représentant des parties à leur état final, c'est-à-dire au moment où l'un des joueurs à gagné où qu'il y a une égalité. On note $g_{0}$ la grille vide.
+
+\subsubsection{Définition 2}
+On note $S$ l'ensemble $\{x,o,i,d\}$ où $x$ est la victoire du joueur $X$, $o$ est la victoire du joueur $O$, $d$ est l'état d'égalité et $i$ est une partie non terminée. $S$ est l'ensemble des états possibles pour une grille de $G$.
+
+\subsubsection{Définition 3}
+On note $\begin{array}{lrcl}
+\varphi : & G & \longrightarrow & S \\
+    & p & \longmapsto & \eta \end{array}$ la fonction qui à une grille associe son état.
+
+\subsubsection{Propriété 1}
+On admettra que : $ \forall p \in G, \exists \eta \in S, \varphi (p)=\eta$, ce qui sera la base de nos calculs.
+
+On a aussi  $\varphi(G_{f}) = \{x,o,d\}$, ensemble des états finaux que l'on notera $S_{f}$.
+
+\subsubsection{Remarque}
+Contrairement à ce que l'on pourrait croire, le nombre de parties possibles n'est pas card  $G_{f}$. Cet ensemble ne contient que les grilles à leur état final, or on peut arriver à un de ces états par des coups joués dans des ordres différents.
+
+\subsubsection{Définition 4}
+
+On note $\begin{array}{lrcl}
+\pi : & G & \longrightarrow & \mathbb{R} \\
+    & g & \longmapsto & x \end{array}$ la fonction qui à une grille associe le nombre de signes qu'elle contient.
+
+\subsubsection{Propriété 2}
+
+Pour une grille $g \in G,  \exists  \alpha{} \in [|0;9-\pi(g)|]$ où $\alpha$ est le nombre de grilles possibles pour le coup de jeu suivant. 
+
+\subsubsection{Définition 5}
+On note $\begin{array}{lrcl}
+\gamma : & G & \longrightarrow & G^{\alpha} \\
+    & g & \longmapsto & L \end{array}$ la fonction qui à une grille associe les grilles qui peuvent être jouées au coup suivant.
+
+\subsubsection{Propriété 3}
+
+Pour qu'une partie soit terminée, il faut placer au moins 5 signes dans la grille, en effet, il faut placer les 3 $O$ alignés qui remportent la partie et les deux $X$ de l'adversaire.
+
+\subsubsection{Définition 6}
+Les parties complètes de jeu peuvent être assimilées à des éléments de $G^{[|0;i|]}, i \in [|5;9|]$. Dans la suite on note $I = [|5;9|]$
+
+On note $P_{i} = \{ (p_{n})_{n \in [|0;i|]} \in G^{[|1;i|]} \quad | \quad p_{0} = g_{0} , p_{i} \in G_{f} , \forall n \in [|1;i|], p_{n} \in \gamma(p_{n-1}) \}$. $P_{i}$ est l'ensemble des parties possibles au <<Tic-Tac-Toe>> qui se finissent en $i$ coups, constitué des suites de $i+1$ grilles de jeu. \\ 
+
+
+On a alors $P = \displaystyle \bigcup_{i \in I} P_{i}$, l'ensemble des parties de jeu possibles.
+
+\subsubsection{Propriété 4}
+
+$\forall ((p_{n}),(q_{n})) \in P^{2}, \exists (g_{0},g_{1},\dots,g_{j}), p_{0}=q_{0}=g_{0}, p_{1}=q_{1}=g_{1}, \dots, p_{j}=q_{j}=g_{j}$ en particulier, $ \forall (p_{n}) \in P, p_{0}= g_{0}$ \\
+
+On appelle $j$ le début commun à $(p_{n})$ et $(q_{n})$
+
+C'est sur cette base qu'est contruit l'arbre de jeu. Celui-ci représente toutes les parties de jeu en partant des éléments qu'elles ont en commun puis introduit des branches après $j$ noeuds (grilles).
+
+\subsection{Dénombrement des parties possibles au <<Tic-Tac-Toe>>}
+
+Il s'agira ici de déterminer card $P$. Vu que les $P_{i}$ s'excluent clairement deux à deux, card $P = \displaystyle \sum_{i \in I} $ card $P_{i}$
+
+Si on regarde la grille de morpion, on constate qu'il y a 9 manières de placer le premier signe, puis 8 manières de placer le second, et ainsi de suite jusqu'à 1. Ce qui nous donne $9! = 362880$ parties possibles. Cependant, une partie peut se finir bien avant que la grille soit remplie avec 9 signes. Il peut y avoir une victoire à partir du 5\up{e} coup joué.
+
+\subsubsection{Nombre de parties qui se finissent au 5\up{e} coup}
+Comme on peut le voir sur la figure~\ref{win}
+, il y a 8 combinaisons d'alignement qui permettent de gagner au morpion. Vu que les $O$ commencent, ce sont eux qui peuvent gagner à ce tour. On ne tient pas compte de l'ordre dans lequel les trois $O$ ont été placés. Les deux $x$ qui ont été joués par le deuxième joueur sont placés dans deux des 6 cases restantes. Ce qui nous donne le calcul suivant : $8 \times 3! \times 6 \times 5 = 1440$.
+
+\begin{figure}[!h]
+\centering
+\includegraphics[scale=1]{Bite.png}
+\caption{Représentation de toutes les victoires possibles}
+\label{win}
+\end{figure}
+
+\subsubsection{Nombre de parties qui se finissent au 6\up{e} coup}
+
+Si la partie se finit en 6 coups, c'est le joueur $X$ qui gagne la partie. Chaque joueur a alors placé 3 signes. Il faut alors tenir compte des combinaisons où le joueur $O$ n'a pas aligné 3 signes. Tout d'abord, nous n'en tenons pas compte et le calcul est le même que précédement, avec un dernier $O$ à placer. On a donc $8 \times 3! \times 6 \times 5 \times 4 = 5760$ possibilités. Maintenant, il faut dénombrer les cas où 3 $O$ seraient aussi alignés. Vu qu'on ne peut pas avoir deux diagonales pleines de $X$ et de $O$ (elles se chevauchent), les $X$ placés dans ce cas se trouvent forcément sur une ligne ou une colonne, et les $O$ placés sont sur une des deux lignes (resp. colonnes) restantes. Ce qui nous donne $6 \times 3! \times 2 \times 3! = 432$. Le nombre de parties qui se finissent au 6\up{e} coup est donc de $5760 - 432 = 5328$.
+
+\subsubsection{Nombre de parties qui se finissent en 7 et 8 coups}
+
+De manière analogue, en faisant attention au fait que les derniers signes placés soient bien ceux qui déterminent la victoire, c'est-à-dire en faisant attention à l'ordre de placement, on trouve pour le nombre de parties qui se finissent en 7 coups : 47952, et pour le nombre de parties qui se finissent en 8 coups : 72576.
+
+\subsubsection{Nombre de parties qui se finissent au 9\up{e} coup}
+
+Pour trouver ce nombre, il nous suffit de soustraire le nombre de parties finies trouvées à chaque coup au nombre total d'arrangements possibles. Ce qui nous donne $362880- 24 \times 1440 - 6 \times 5328 - 2 \times 47952 - 1 \times 72576 = 127872$ parties qui finissent en une victoire au 9e coup ou une égalité.
+
+\subsubsection{Nombre total de parties et taille en mémoire de l'arbre}
+
+En additionnant tous les résultats trouvés ci-dessus, on trouve qu'il existe au total 255168 parties de <Tic-Tac-Toe>>. D'où card $P = 255168$Ce nombre peut sembler grand, mais en réalité cela fait relativement peu de parties en comparaison avec les échecs. 
+Pour trouver la place que tout l'arbre de jeu prendra en mémoire il ne faut pas seulement compter le nombre de parties, mais aussi toutes les étapes intermédiaires et nous avons donc facilement, en posant qu'une grille prendra 10 octets de mémoire, $10(5 \times 1440 + 6 \times 5328 + 7 \times 47952 + 8 \times 72576 + 9 \times 127872) = 9554400$ octets. Soit 9,1 Mo.
 
 \subsection{L'algorithme Min-Max}
 
 L'exploitation des arbres de jeu peut être faite par l'algorithme Min-Max
-que nous allons appliquer au jeu du <<Tic Tac Toe>>. \\
+que nous allons appliquer au jeu du <<Tic Tac Toe>>. 
 
-Commençons par citer l'origine de cette algorithme. C'est l'américano-hongrois Neumann János Lajos qui a énoncé et démontré en 1928 le théorême de minimax. Il est aussi appelé théorème fondamental de la théorie des jeux à deux joueurs.
+Commençons par citer l'origine de cette algorithme. 
+C'est l'américano-hongrois Neumann János Lajos qui a énoncé et démontré en 1928 le théorême de minimax.
+Il est aussi appelé théorème fondamental de la théorie des jeux à deux joueurs.
 
 Par définition, l'algorithme Min-
 Max se prête à un jeu à deux joueurs dans le but d'appliquer une stratégie
 gagnante.
-Afin d'introduire cet algorithme, expliquons la condition de somme nulle qui
-doit être remplie pour Min-Max :
-lorsque le joueur gagne une partie, on ajoute 1 à son gain et respectivement -1
-lors
-d'une défaite et 0 lors d'une partie nulle. \\
 
-On peut donc considérer que le <<Tic Tac Toe>> est un jeu à somme nulle.
-Dans la suite on se place dans le cadre du <<Tic Tac Toe>>. \\
+\subsubsection{Les jeux de somme nulle}
+Afin d'introduire l'algorithme, expliquons la condition de somme nulle qui
+doit être remplie pour Min-Max : <<Un jeu de somme nulle est un jeu où la somme des gains de tous les joueurs est égale à 0>>
+Si par exemple, lorsque le joueur gagne une partie, on ajoute 1 à son gain et respectivement -1 et 0 lors d'une défaite ou d'une partie nulle, on peut considérer qu'un jeu est de somme nulle.
+On peut par exemple citer l'exemple du jeu d'échecs ou des dames. 
 
-L'algorithme Min-Max est donc simple : après que l'IA ai calculé toutes les
-possibilités de jouer,
- il choisi la meilleure option pour gagner. \\
+Cette notion est en réalité plus compliquée que cela, mais nous ne étendrons pas dessus, puisqu'elle n'est qu'une conidition qui devait être vérifiée
+pour le jeu que nous allons étudier. 
+On considère donc que le <<Tic Tac Toe>> est un jeu à somme nulle.
+Dans la suite on se place dans le cadre du <<Tic Tac Toe>>. 
 
-On s'imagine alors bien que Min-Max peut calculer à différents ordres. L'ordre 1
-correspond à l'ordre auquel
-l'IA calcule uniquement les différentes possibilités pour le coup suivant et
-Min-Max cherche uniquement
-la meilleure solution pour le coup suivant. De même, on définit donc l'ordre 2
-et plus.
-Donc, à l'ordre 2, Min-Max évalue son prochain coup et le coup de l'adversaire,
-et évidemment
-l'IA considère que les deux coups joués sont effectués en vue de gagner. L'IA
-"veut" donc
-maximiser son score sur le prochain coup, tout en minimisant le coup suivant de
-l'adversaire.
-D'où le terme de Min-Max.
+
+\subsubsection{Explication de l'algorithme}
+
+Le principe de l'algorithme Min-Max est simple : on contruit un arbre de jeu dont la racine est l'état actuel de la partie, 
+et dont les branches en sont les différentes évolutions possibles. C'est à dire les différentes options de jeu entre lesquelles nous devons choisir.
+On va ensuite attribuer un poids à chaque branche, de sorte que les branches ayant le poids le plus grand représentent les choix les plus avantageux.
+Si ensuite on explore l'arbre à l'ordre 2, c'est-à-dire pour le coup qui vient après le notre (celui de l'adversaire), il faut choisir, en partant du principe que 
+l'adversaire cherche à jouer le meilleur coup possible, la branche ayant le poids le plus faible. D'où le nom de Min-Max.
+
+
+
+On s'imagine alors bien que Min-Max peut calculer à $n$ ordres. L'ordre 1
+correspond à l'ordre auquel Min-Max cherche uniquement la meilleure solution pour le coup suivant. 
+De même, on définit donc les ordres $>2$.
+À l'ordre 2, Min-Max évalue son prochain coup et le coup de l'adversaire, donc, à un ordre impair, on regarde notre coup en le <<maximisant>>, à un ordre pair, on regarde le coup de l'adversaire, en le minimisant.
+
+\subsection{La simplification NegaMax}
+
+Pour ne pas avoir à alterner maximisation et minimisation, on peut, en partant du principe que les poids des branches sont symétriques par rapport à 0, 
+dire que les poids des nœuds adverses sont négatifs. De cette manière, on aura toujours à prendre le maximum, sans se poser la question de la personne qui joue.
 
 
 \subsection{L'élagage $\alpha \beta$}
 
-Bien que le <<Tic-Tac-Toe>> soit assez simple, les nombre de coups qui doivent être évalués par l'algorithme Min-Max reste conséquent. L'élagage $\alpha{} - \beta{}$ sert à mettre de côté les branches dont l'intérêt sera forcément moindre afin de gagner en efficacité. On gagne donc nettement en coût de calcul. Concrètement, lorsque la valeur d'un nœud atteint une certaine valeur que l'on ne veut pas dépasser, cette branche est alors inexplorée. Ce nouvel algorithme correspond donc à une optimisation de Min-Max.
+Bien que le <<Tic-Tac-Toe>> soit assez simple, les nombre de coups qui doivent être évalués par l'algorithme Min-Max reste conséquent. 
+L'élagage $\alpha - \beta$ 
+sert à mettre de côté les branches dont l'intérêt sera forcément moindre afin de gagner en efficacité. 
+On gagne donc nettement en coût de calcul. 
+Concrètement, lorsque la valeur d'un nœud atteint une limite que l'on ne veut pas dépasser, 
+la branche reste inexplorée. Ce nouvel algorithme correspond donc à une optimisation de Min-Max.
 
 
 \section{Présentation des programmes}
 
 Dans cette partie, nous allons exposer les différentes parties des programmes que nous avons créés. Le langage de programmation utilisé est Python. Le code peut être trouvé en annexe.
 
-\subsection{La génération de l'arbre}
+\subsection{La génération de l'arbre entier avec genere\_ arbre.py }
 
-Une structure personnelle à base de dictionnaires a été utilisée pour la mise en mémoire des données. Les noeuds de l'arbre sont représentés par les grilles de jeu à un instant de la partie, les branches qui en découlent sont toutes les possibilités de coup envisageables. L'arbre est construit récursivement à partir la grille de départ par la fonction \emph{arbre\_a\_partir\_de}, qui va explorer toutes les possibilités. Le temps de calcul n'est pas excessivement long car finalement, le jeu de morpion est très simple et il n'y a <<qu'environ>> 200 000 parties possibles. C'est une solution de génération qui ne serait pas envisageable au jeu d'échecs par exemple, car le temps de calcul serait beaucoup trop long (il y a $2.10\up{116}$ parties possibles aux échecs), en effet, il faudrait $10\up{21}$ siècles pour que le plus puissant calculateur d'échecs puisse établir tout l'arbre.
+Une structure personnelle à base de dictionnaires a été utilisée pour la mise en mémoire des données, avec la fonction @arbre_dico@ définie plus bas. Les noeuds de l'arbre sont représentés par les grilles de jeu à un instant de la partie, les branches qui en découlent sont toutes les possibilités de coup envisageables. L'arbre est construit récursivement à partir la grille de départ par la fonction @arbre_dico@, qui va explorer toutes les possibilités. Le temps de calcul n'est pas excessivement long car finalement, le jeu de morpion est très simple et il n'y a <<qu'environ>> 200 000 parties possibles. C'est une solution de génération qui ne serait pas envisageable au jeu d'échecs par exemple, car le temps de calcul serait beaucoup trop long (il y a $2.10\up{116}$ parties possibles aux échecs), en effet, il faudrait $10\up{21}$ siècles pour que le plus puissant calculateur d'échecs puisse établir tout l'arbre.
 
 La structure ressemble à celle montrée dans la figure~\ref{tree}.
 
@@ -159,56 +278,109 @@ La structure ressemble à celle montrée dans la figure~\ref{tree}.
 \label{tree}
 \end{figure}
 
-\subsection{Description des fonctions}
+Dans notre code, les grilles de morpion sont représentées sous la forme d'une liste de 3 listes, formant une matrice 3x3.
 
-Dans notre code, les grilles de morpion sont représentées sous la forme d'une liste de 3 listes, formant une sorte de tableau.
+\subsection{Le fichier morpion.py}
 
-\subsubsection{Le fichier morpion.py}
+Ce fichier réunit les fonctions qui vont être exploitées par les autres fichiers pour les algorithmes. Il est constitué des fonctions basiques que l'on veut pouvoir appliquer simplement à une grille de morpion. Les fonctions qui ne seront pas utilisées par la suite ne seront pas décrites.
 \begin{itemize}
 
-\item la fonction @state@ prend en argument une grille de morpion et renvoie l'état dans lequel se trouve la partie. Celui-ci peut être \emph{in progress}, quand la partie est en cours, \emph{o win} quand les ronds ont gagné, \emph{x win} quand les croix ont gagné ou \emph{draw} quand la partie est dans un cas d'égalité. \\
+\item la fonction @state@ prend en argument une grille de morpion et renvoie l'état dans lequel se trouve la partie. Celui-ci peut être \emph{in progress}, quand la partie est en cours, \emph{o win} quand les ronds ont gagné, \emph{x win} quand les croix ont gagné ou \emph{draw} quand la partie est dans un cas d'égalité. C'est la fonction $\varphi$ définie plus haut.
 
-\item la fonction @tour@ prend en argument une grille et détermine quel joueur doit jouer, en comptant le nombre de cases occupées par chaque signe, et en partant du principe que les ronds commencent la partie. \\
+\item la fonction @tour@ prend en argument une grille et détermine quel joueur doit jouer, en comptant le nombre de cases occupées par chaque signe, et en partant du principe que les ronds commencent la partie. 
 
-\item @cases_vides@ est une fonction qui à une grille associe la liste des couples des coordonnées des cases vides, ce qui est utile dans la suite, pour déterminer les coups possibles. \\
+\item @cases_vides@ est une fonction qui à une grille associe la liste des couples des coordonnées des cases vides, ce qui est utile dans la suite, pour déterminer les coups possibles. 
 
-\item la fonction @tableaux_possibles@ cherche toutes les possibilités de jeu pour une grille donnée, c'est à dire qu'elle renvoie une liste des grilles avec chaque coup possible joué, ce qui sert en partie dans la structure de l'arbre. \\
+\item La fonction @tableaux_possibles@ cherche toutes les possibilités de jeu pour une grille donnée, c'est à dire qu'elle renvoie une liste des grilles avec chaque coup possible joué, ce qui sert en partie dans la structure de l'arbre. C'est la fonction $\gamma$, définie dans la section Notations.
 
-\item deux fonctions de représentation existent, elles affichent une grille ou une liste de grilles en caractères alphanumériques \\
+\item Deux fonctions de représentation existent, elles affichent une grille ou une liste de grilles de jeu en caractères alphanumériques.
 
-\item la fonction @arbre_a_partir_de@ utilise les autres fonctions définies ci-dessus pour générer l'arbre du jeu à partir d'une grille donnée, c'est-à-dire qu'elle ne génère pas forcément l'arbre entier, mais peut n'en générer qu'une partie, par exemple pour savoir quel coup jouer à partir d'un certain moment du jeu. Les coups d'ouverture aux morpion étant souvent les mêmes (le premier joueur va avoir tendance à jouer dans la première case en haut à gauche), on peut par exemple les gérér au cas par cas par une réponse immédiate, sans utiliser l'arbre. C'est la même chose qui est faite par les intelligences artificielles aux échecs, qui piochent leurs coups de départ dans une bibliothèque d'ouverture.
+\item Les fonctions @prendre_colonne@ et @prendre_diagonale@ servent à extraire une colonne ou une diagonale pour être exploitées comme si elles étaient des lignes.
+
+\item La fonction @arbre_dico@ utilise les autres fonctions définies ci-dessus pour générer l'arbre du jeu à partir d'une grille donnée, c'est-à-dire qu'elle ne génère pas forcément l'arbre entier, mais peut n'en générer qu'une partie, par exemple pour savoir quel coup jouer à partir d'un certain moment du jeu. Les coups d'ouverture aux morpion étant souvent les mêmes (le premier joueur va avoir tendance à jouer dans la première case en haut à gauche), on peut par exemple les gérér au cas par cas par une réponse immédiate, sans utiliser l'arbre. C'est la même chose qui est faite par les intelligences artificielles aux échecs, qui piochent leurs coups de départ dans une bibliothèque d'ouverture.
+
+\item la fonction @arbre_a_partir_de@ prend en argument une grille est renvoie une chaine de caractères contenant tout l'arbre et pouvant être sauvegardée dans un fichier texte. Cependant la représentation qu'elle donne n'est pas réellement exploitable visuellement.
 
 \end{itemize}
 
 
-\subsubsection{Les calculs statistiques avec le fichier stats.py}
+\subsection{Les calculs statistiques avec le fichier stats.py}
 
-Bien que ce ne soit pas exactement le sujet ici, pour vérifier que l'arbre était bien juste et que notre algorithme était fonctionnel, nous avons créé des fonctions permettant de trouver les nombres de parties possibles et de parties gagnantes possibles pour chaque coup, chiffres que nous avons comparés à ceux que l'on peut trouver par dénombrement.
+Bien que ce ne soit pas exactement le sujet ici, pour vérifier que l'arbre était bien juste et que notre algorithme était fonctionnel, nous avons créé des fonctions permettant de trouver les nombres de parties possibles et de parties gagnantes possibles pour chaque coup, chiffres que nous avons comparés à ceux que l'on a pu trouver par dénombrement. Vu qu'on trouve les mêmes chiffres, on peut dire que l'arbre que nous avons généré est bien correct.
 
-\paragraph{Le calcul par dénombrement}
+Les chiffres nous permettent de dire que le joueur qui commence le jeu a un avantage considérable quant à l'issue de la partie, puisqu'il y a quasiment deux fois plus de combinaisons favorables à sa victoire. On constate aussi que si le joueur qui commence la partie joue dans un des coins de la grille, ses <<chances>> de gagner sont quasiment doublées.
 
-Si on regarde la grille de morpion, on constate qu'il y a 9 manières de placer le premier signe, puis 8 manières de placer le second, et ainsi de suite jusqu'à 1. Ce qui nous donne $9! = 362880$ parties possibles. Cependant, une partie peut se finir bien avant que la grille soit remplie avec 9 signes. Il peut y avoir une victoire à partir du 5\up{e} coup joué.
+Le fichier @stats.py@ est constitué d'une seule fonction @statswin@, qui à un morceau d'arbre associe le nombre de victoires pour $X$, le nombre de victoires pour $O$ et le nombre d'égalités qu'on y rencontre. Elle parcourt l'arbre de manière récursive jusqu'au feuilles en comptant. On trouve grâce à elle qu'il y a en tout 77904 possibilités de victoire pour $X$, 131184 pour $O$ et 46080 égalités.
 
-\subparagraph{Nombre de parties qui se finissent au 5\up{e} coup}
-Comme on peut le voir sur la figure~\ref{win}, il y a 8 combinaisons d'alignement qui permettent de gagner au morpion. Vu que les $O$ commencent, ce sont eux qui peuvent gagner à ce tour. On ne tient pas compte de l'ordre dans lequel les trois $O$ ont été placés. Les deux $x$ qui ont été joués par le deuxième joueur sont placés dans deux des 6 cases restantes. Ce qui nous donne le calcul suivant : $8*3!*6*5 = 1440$.
+\subsection{L'exploitation de l'arbre pour le jeu avec minmax.py}
+
+\subsubsection{La fonction d'évaluation utilisée}
+
+Pour attribuer un poids à une grille, on utilise la fonction @evaluer@. Elle est très simple, au sens où le poids qui est attribué augmente de 1 pour chaque série de deux signes alignés pour le joueur sans signe de l'adversaire sur la même ligne/colonne/diagonale, et diminue de 1 pour chaque série de deux signes alignés pour l'adversaire. Cette fonction vérifie aussi si la grille représente une victoire ou une défaite, grâce à la fonction @state@ décrite plus haut. Si la grille réprésente une victoire certaine pour le joueur, elle a un poids <<infini>> de 3000, et inversement, si elle représente une défaite, un poids de -3000.
+
+
+Pour reconnaître l'alignement de deux signes sur une ligne, ou une colonne (resp. diagonale) transformée en ligne grâce à @prendre\_colonne@ (resp. @prendre\_diagonale@), la fonction @evaluer@ appelle la fonction @align2@, qui parcourt simplement la ligne et renvoie vrai si les conditions sont réunies.
+
+\subsubsection{Les fonctions Min et Max}
+
+Ces fonctions sont l'application de l'algorithme MinMax. Elles prennent en argument une grille et une profondeur de recherche. Si la profondeur est égale à 1, elles font directement appel à la fonction @evaluer@ pour renvoient la grille ayant le poids maximal ou minimal (selon la fonction utilisée). Si la profondeur est supérieure à 1, Max (resp. Min) fait appel à Min (resp. Max) sur chaque grille possible au coup suivant, avec une profondeur réduite de 1. C'est une sorte de récursion mais sur deux fonction. Nous aurions pu ne créer qu'une fonction minmax, mais en créer deux illustre vraiment le parrallèle entre les nœuds Min, et les nœuds Max de l'arbre de jeu.
+
+On se rend bien vite compte que, vu qu'une partie de <<Tic-Tac-Toe>> se joue en 9 coups, si l'on applique l'algorithme avec une profondeur de 9, minmax ne peut pas perdre. Cependant, vu que notre algorithme n'a pas été optimisé avec l'élagage alpha-beta, il lui faut plus d'une vingtaine de secondes pour explorer tout l'arbre et trouver le meilleur coup à jouer.
+
+
+\subsection{Tester l'algorithme MinMax avec play\_morpion.py}
+
+Pour pouvoir vérifier que l'algorithme décrit ci-dessus fonctionne bien, nous avons créé un petit jeu en ligne de commande qui nous permet d'affronter une intelligence artificielle munie de celui-ci. On utilise ici pour représenter les grilles dans la console la fonction @representation@ du fichier @morpion.py@ décrite plus haut. Le fichier @play_morpion.py@ consiste en une fonction principale @game@, qui lance simplement la procédure de jeu, et qui prend en argument la profondeur de récursivité que MinMax doit appliquer.
+
+L'utilisateur doit à chacun de ses tours de jeu entrer les coordonnées de son coup sous la forme d'entiers compris entre 0 et 2. Par exemple, pour jouer dans la case en haut à droite, il faut entrer 0 2 (0 pour la ligne, 2 pour la colonne).
+
+En jouant quelques parties nous nous sommes vite rendus compte que nous n'arrivions pas à battre MinMax, même avec une profondeur de 1. Le meilleur des cas est une égalité, ce qui prouve bien notre programme et l'efficacité de l'algorithme MinMax.
+
+\subsection{Parcourir graphiquement l'arbre de jeu avec arbre\_pygame.py}
+
+Plusieurs solutions d'affichages graphique de l'arbre de jeu ont été envisagées, mais celui-ci peut difficilement être représenté dans son intégralité, il n'est donc pas possible de le joindre à ce document. Il peut cependant être trouvé à l'adresse indiquée dans la section "Liens". La solution retenue est une application graphique représentant une grille de jeu reliée à ses grilles <<filles>>. La librairie graphique utilisée est pygame, qui, bien qu'à l'origine concue pour créer des jeux, se trouvait bien adaptée à la simplicité de mise en œuvre que nous cherchions. Son fonctionnement ne sera pas détaillé dans ce document.
+
 
 \begin{figure}[!h]
 \centering
-\includegraphics[scale=1]{Bite.png}
-\caption{Représentation de toutes les victoires possibles}
-\label{win}
+\includegraphics[scale=0.35]{screen_app.png}
+\caption{Capture d'écran de l'application}
+\label{screen}
 \end{figure}
 
-\subparagraph{Nombre de parties qui se finissent au 6\up{e} coup}
-
-
-\paragraph{Le calcul par ordinateur}
-
-Les chiffres nous permettent de dire que le joueur qui commence la partie a un avantage considérable quant à l'issue de la partie, puisqu'il y a quasiment deux fois plus de combinaisons favorables à sa victoire. On constate aussi que si le joueur qui commence la partie joue dans un des coins de la grille, ses <<chances>> de gagner sont quasiment doublées.
+L'arbre de jeu est parcouru à l'aide des touches fléchées du clavier. Les touches <<gauche>> et <<droite>> servent à sélectionner une grille. La touche <<bas>> sert à descendre dans l'arbre de jeu. La grille courante est remplacée par la grille sélectionnée. La touche <<haut>> permet de remonter dans l'arbre de jeu.
 
 
 
+\lstset{language=Python,frame=single,breaklines=true,extendedchars=true, numbers=left,basicstyle=\footnotesize}
+\section{Annexes}
 
+\subsection{Fichier morpion.py}
+\lstinputlisting{morpion.py}
+\subsection{Fichier stats.py}
+\lstinputlisting{stats.py}
+\subsection{Fichier minmax.py}
+\lstinputlisting{minmax.py}
+\subsection{Fichier genere\_arbre.py}
+\lstinputlisting{genere_arbre.py}
+\subsection{Fichier play\_morpion.py}
+\lstinputlisting{play_morpion.py}
+\subsection{Fichier arbre\_pygame.py}
+\lstinputlisting{arbre_pygame.py}
+
+
+
+\section{Liens}
+
+\begin{itemize}
+\item Tous les fichiers .tex, .py et images de ce document, ainsi que l'arbre généré : https://github.com/timosis/TIPE
+
+\item L'interpréteur Python : http://www.python.org/
+
+\item La librairie Pygame pour Python : http://www.pygame.org/
+
+\item La licence GNU GPL : http://www.gnu.org/licenses/gpl-3.0.en.html
+\end{itemize}
 
 
 \end{document}
